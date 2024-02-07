@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Analyse Velibs  </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+<body>
+
+	<!-- Header de la page -->
+	<header>
+		<a href="#" class="logo">Analyse Velibs</a>
+
+		<ul class="navlist">
+			<li><a href="#accueil" class="active">Accueil</a></li>
+			<li><a href="#carte">Carte</a></li>
+			<li><a href="#graphique">Graphique</a></li>
+			
+		</ul>
+
+	</header>
+
+  <script>
+    // JavaScript pour ajouter la classe "show" pour déclencher l'animation
+  window.onload = function() {
+  window.scrollTo(0, 0);
+  var textSlide = document.querySelector('header');
+  textSlide.classList.add('show');
+}
+  </script>
+	<!--  Accueil -->
+	<section class="accueil" id="accueil">
+		<div class="presentation">
+			<h1>Analyse velibs</h1>
+			<h3>Analyse de Donnée velibs en Île-de-France</h3>
+            <p> Notre logiciel développé en Python permet d'analyser les données des stations Vélib partagées par Vélib. Les données sont mises à jour toutes les 10 minutes. Sur ce site, vous pouvez observer une carte avec l'emplacement et les informations de chaque station Vélib, ainsi que des graphiques pour observer l'évolution des données dans le temps.</p>
+	</section>
+	<section class="carte" id="carte">
+	<div class="content" >
+	<h2>Carte parisienne</h2>
+		<div class="map">
+		<iframe src="../static/carte.html"></iframe>
+		</div>
+		
+		<div class="legend">
+        <div class="legend-item">
+            <img src="{{ url_for('static', filename='image_site/blue_ping.png') }}" alt="Légende 1">
+            <span class="legend-text">Station active avec vélo</span>
+        </div>
+        <div class="legend-item">
+            <img src="{{ url_for('static', filename='image_site/orange_ping.png') }}" alt="Légende 2">
+            <span class="legend-text">Station active sans vélo</span>
+        </div>
+        <div class="legend-item">
+            <img src="{{ url_for('static', filename='image_site/red_ping.png') }}" alt="Légende 3">
+            <span class="legend-text">Station non active</span>
+        </div>
+		</div>
+	</section>
+	<br><br>
+	
+
+	<!-- Résultats -->
+	<section class="analyse" id="graphique">
+	<div class="button">
+                <div id="searchData">
+                    <form action="/submit_form" method="POST">
+					<label for="value">Sélectionnez un graphique:</label>
+					<select name="function_type">
+						<option value="function1">Analyses par station </option>
+						<option value="function2">Analyses par ville éléctrique/mécanique</option>
+						<option value="function7">Analyse par ville au fil de temps du nombre de vélo</option>
+						<option value="function4">Analyse par département des stations actif/inactif</option>
+						<option value="function3">Analyse global de la répartition vélo éléctrique/mécanique</option>
+						<option value="function6">Analyse global du nombre de vélo</option>
+						<option value="function5">Analyse global de la répartition vélo éléctrique/mécanique au fil du temps sur les 5 regions les plus peuplés</option>
+					</select>
+					<div id="function1-input">
+						<label for="input_station">Code station:</label>
+						<input type="text" id="input_station" name="input_station">
+					</div>
+					<div id="function2-input">
+						<label for="regions">Sélectionnez une ville:</label>
+							<select name="region">
+								<option value="Paris">Paris</option>
+								<option value="Boulogne-Billancourt">Boulogne-Billancourt</option>
+								<option value="Montreuil">Montreuil</option>
+								<option value="Issy-les-Moulineaux">Issy-les-Moulineaux</option>
+								<option value="Pantin">Pantin</option>
+							</select>
+					</div>
+					<div id="choix_global">
+						<input type="radio" name="ordre" id="ASC" value="ASC">
+						<label for="ASC">Regions les moins peuplé en station</label>
+
+						<input type="radio" name="ordre" id="DESC" value="DESC">
+						<label for="DESC">Regions les plus peuplé en station</label>
+					</div>
+				<script>
+   document.addEventListener("DOMContentLoaded", function() {
+      var functionSelect = document.querySelector('select[name="function_type"]');
+      var function1Input = document.getElementById('function1-input');
+      var function2Input = document.getElementById('function2-input');
+      var date_affichage = document.getElementById('date_affichage');
+	  var choix_global = document.getElementById('choix_global');
+	  
+      function2Input.style.display = "none";
+	  choix_global.style.display = "none";
+	  
+      functionSelect.addEventListener("change", function() {
+	  
+         if (functionSelect.value === "function1" ) {
+            function1Input.style.display = "block";
+            function2Input.style.display = "none";
+			choix_global.style.display = "none";
+			date_affichage.style.display = "block";
+			
+            
+         } else if (functionSelect.value === "function2") {
+            function1Input.style.display = "none";
+            function2Input.style.display = "block";
+            date_affichage.style.display = "block";
+			choix_global.style.display = "none";
+         } else if (functionSelect.value === "function4" ) {
+			date_affichage.style.display = "none";
+			function1Input.style.display = "none";
+			choix_global.style.display = "none";
+            function2Input.style.display = "none";
+         }else if (functionSelect.value === "function5" ) {
+			date_affichage.style.display = "block";
+			function1Input.style.display = "none";
+			choix_global.style.display = "none";
+            function2Input.style.display = "none";
+         } 
+		 else if (functionSelect.value === "function3" || functionSelect.value === "function6"){
+		    function1Input.style.display = "none";
+            function2Input.style.display = "none";
+			choix_global.style.display = "block";
+			date_affichage.style.display = "block";
+		 
+		 
+		 
+		 
+		 }else if (functionSelect.value === "function7"){
+		    function1Input.style.display = "none";
+            function2Input.style.display = "block";
+			choix_global.style.display = "none";
+			date_affichage.style.display = "block";
+		 
+		 
+		 
+		 
+		 }else {
+            function1Input.style.display = "none";
+            function2Input.style.display = "none";
+			choix_global.style.display = "none";
+			date_affichage.style.display = "block";
+         }
+      });
+   });
+</script>
+					<br>
+					<div id="date_affichage">
+						<label for="value_min_date">Sélectionnez une date minimum:</label>
+						  <input type="date" id="value_min_date" name="value_min_date" min="2021-01-01" class="btn2" >
+						  <label for="value_max_date">Sélectionnez une date maximum:</label>
+						  <input type="date" id="value_max_date" name="value_max_date" min="2021-01-01" class="btn2" >
+					</div>	  
+						  <br>
+					  <input type="submit" class="btn" onclick="displayValue()" value="ANALYSER">  
+                    </form>
+               
+              </div>
+			</div>
+   
+          
+            </div>
+			<div class="centre">
+				<img src="{{ image_path }}" alt="Uploaded Image" class='centre'>
+				{% if image_path2 != 'blanc.jpg' %}
+					<img src="{{ image_path2 }}" alt="Uploaded Image" class='centre'>
+				{% endif %}
+			</div>
+	</section>
+			
+			
+	<footer class="footer">
+	</footer>
+         
+
+</body>
+</html>
